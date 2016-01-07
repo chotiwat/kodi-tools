@@ -1,0 +1,6 @@
+{
+  "parser": "C:\\Program Files\\nodejs\\node_modules\\babel-eslint",
+  "rules": {
+    "strict": 0
+  }
+}
