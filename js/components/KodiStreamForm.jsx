@@ -5,11 +5,10 @@ const KodiStreamForm = React.createClass({
     return { streamUrl: '' };
   },
   handleStreamChange: function(e) {
-    
+    this.setState({ streamUrl: e.target.value });
   },
   handleSubmit: function(e) {
     e.preventDefault();
-    this.setState({ streamUrl: e.target.value });
     this.props.playStream(this.state.streamUrl);
   },
   render: function() {

@@ -1,9 +1,8 @@
 const React = require('react');
-const Xbmc = require('xbmc');
 
 const KodiServerConfig = React.createClass({
   getInitialState: function() {
-    return { host: '192.168.0.110', port: 8080, conn: null };
+    return { host: '192.168.0.110', port: 8080, user: 'kod', pass: 'kod' };
   },
   handleHostChange: function(e) {
     this.setState({ host: e.target.value });
@@ -11,31 +10,51 @@ const KodiServerConfig = React.createClass({
   handlePortChange: function(e) {
     this.setState({ port: e.target.value });
   },
-  handleSubmit: function(e) {
-    e.preventDefault();
-    if (this.conn) {
-      this.state.conn.close();
-      this.setState({ conn: null });
-    } else {
-      this.setState({
-        conn: new Xbmc.TCPConnection({
-          host: this.state.host,
-          port: this.state.port
-        })
-      });
-    }
-
-    this.props.updateConnection(this.state.conn);
+  handleUserChange: function(e) {
+    this.setState({ user: e.target.value });
   },
+  handlePasswordChange: function(e) {
+    this.setState({ pass: e.target.value });
+  },
+  // handleSubmit: function(e) {
+  //   e.preventDefault();
+  //   let config;
+  //   if (this.state.config) {
+  //     config = null;
+  //   } else {
+  //     config = {
+  //       host: this.state.host,
+  //       port: this.state.port,
+  //       user: 'kod',
+  //       pass: 'kod'
+  //     };
+  //   }
+
+  //   this.setState({ config: config });
+  //   this.props.updateConfig(config);
+  // },
   render: function() {
-    let connectString = this.state.conn ? 'Disconnect' : 'Connect';
+    this.props.updateConfig({
+      host: this.state.host,
+      port: this.state.port,
+      user: this.state.user,
+      pass: this.state.pass
+    });
+    let connectString = this.state.config ? 'Disconnect' : 'Connect';
     return (
-      <form className="server-config" onSubmit={this.handleSubmit}>
-        <input type="text" value={this.state.host} disabled={!!this.state.conn}
-          onChange={this.handleHostChange} />
-        <input type="number" value={this.state.port} disabled={!!this.state.conn}
-          onChange={this.handlePortChange} />
-        <button type="submit">{connectString}</button>
+      <form className="server-config">
+        <div className="control-group">
+          <label htmlFor="host">Host: </label> 
+          <input id="host" type="text" value={this.state.host} onChange={this.handleHostChange} /> 
+          <label htmlFor="port">Port: </label>
+          <input id="port" type="number" value={this.state.port} onChange={this.handlePortChange} />
+        </div>
+        <div className="control-group">
+          <label htmlFor="user">User: </label> 
+          <input id="user" type="text" value={this.state.user} onChange={this.handleUserChange} /> 
+          <label htmlFor="pass">Pass: </label>
+          <input id="pass" type="password" value={this.state.pass} onChange={this.handlePasswordChange} />
+        </div>
       </form>
     );
   }
