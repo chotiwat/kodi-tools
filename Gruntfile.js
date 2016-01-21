@@ -2,6 +2,14 @@ module.exports = (grunt) => {
   require('load-grunt-tasks')(grunt);
 
   grunt.initConfig({
+    clean: ['dist'],
+    copy: {
+      dist: {
+        files: [
+          { expand: true, cwd: 'node_modules/bootstrap/dist/', src: '**', dest: 'dist' }
+        ]
+      }
+    },
     browserify: {
       dist: {
         options: {
@@ -14,11 +22,11 @@ module.exports = (grunt) => {
           ]
         },
         files: {
-          'js/bundle.js': [ 'js/main.jsx' ]
+          'dist/js/bundle.js': [ 'js/main.jsx' ]
         }
       }
     }
   });
 
-  grunt.registerTask('default', ['browserify']);
+  grunt.registerTask('default', ['clean', 'copy', 'browserify']);
 }
