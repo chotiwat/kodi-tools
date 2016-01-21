@@ -3,11 +3,9 @@ const KodiPlaylistItem = require('./KodiPlaylistItem');
 
 const KodiPlaylist = React.createClass({
   render: function() {
-    const playlistItems = this.props.data.map(function(playlistItem) {
+    const playlistItems = this.props.data.map(function(playlistItem, index) {
       return (
-        <KodiPlaylistItem key={playlistItem.key}>
-          {JSON.stringify(playlistItem)}
-        </KodiPlaylistItem>
+        <KodiPlaylistItem key={index} data={playlistItem} />
       );
     });
     return (

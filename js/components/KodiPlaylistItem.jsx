@@ -2,9 +2,10 @@ const React = require('react');
 
 const KodiPlaylistItem = React.createClass({
   render: function() {
+    let item = this.props.data;
     return (
       <li>
-        {this.props.children.toString()}
+        {item.label} <small>{item.file}</small>
       </li>
     );
   }

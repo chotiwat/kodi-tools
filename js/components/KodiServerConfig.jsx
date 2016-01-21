@@ -2,7 +2,7 @@ const React = require('react');
 
 const KodiServerConfig = React.createClass({
   getInitialState: function() {
-    return { host: '192.168.0.110', port: 8080, user: 'kod', pass: 'kod' };
+    return this.props.config;
   },
   handleHostChange: function(e) {
     this.setState({ host: e.target.value });
@@ -34,12 +34,12 @@ const KodiServerConfig = React.createClass({
   //   this.props.updateConfig(config);
   // },
   render: function() {
-    this.props.updateConfig({
-      host: this.state.host,
-      port: this.state.port,
-      user: this.state.user,
-      pass: this.state.pass
-    });
+    // this.props.updateConfig({
+    //   host: this.state.host,
+    //   port: this.state.port,
+    //   user: this.state.user,
+    //   pass: this.state.pass
+    // });
     let connectString = this.state.config ? 'Disconnect' : 'Connect';
     return (
       <form className="server-config">

@@ -3,6 +3,7 @@
 // const rpc = require('json-rpc2');
 const urllib = require('url');
 const $ = require('jquery');
+const async = require('async');
 
 class KodiApi {
   constructor(config) {
@@ -33,7 +34,7 @@ class KodiApi {
       }))
     })
     .done(function(data) {
-      callback(null, data);
+      callback(null, data.result);
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
       callback(errorThrown);
@@ -46,8 +47,37 @@ class KodiApi {
     this.call('Player.Open', [ { file: url }, { resume: true } ], callback);
   }
 
-  getItem(callback) {
-    this.call('Player.GetItem', [ 1, [] ], callback);
+  getPlaylist(callback) {
+    async.waterfall([
+      cb => {
+        this.call('Player.GetActivePlayers', [], cb);
+      },
+      (activePlayers, cb) => {
+        console.log('activePlayers', activePlayers);
+        let player;
+        activePlayers.forEach(activePlayer => {
+          console.log(activePlayer);
+          if (activePlayer.type === 'picture')
+            return;
+          if (activePlayer.type === 'video' || !player) {
+            player = activePlayer;
+          }
+        });
+        console.log('player', player);
+        if (player) {
+          this.call('Player.GetProperties', [player.playerid, ['playlistid']], cb);
+        } else {
+          cb(new Error('No active player found'));
+        }
+      },
+      (player, cb) => {
+        this.call('Playlist.GetItems', [player.playlistid, [
+          'duration',
+          'title',
+          'file'
+        ]], cb);
+      }
+    ], callback);
   }
 }
 

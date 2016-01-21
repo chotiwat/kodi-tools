@@ -2,22 +2,28 @@ const React = require('react');
 const KodiServerConfig = require('./KodiServerConfig');
 const KodiPlaylist = require('./KodiPlaylist');
 const KodiStreamForm = require('./KodiStreamForm');
+const KodiAddonBrowser = require('./KodiAddonBrowser');
 // const request = require('request');
 // const urllib = require('url');
 const KodiApi = require('../lib/kodi-api');
 
 const KodiToolBox = React.createClass({
-  config: {},
+  config: { host: '192.168.0.110', port: 8080, user: 'kod', pass: 'kod' },
   api: null,
-  componentDidMount: function() {
-    setInterval(this.refreshPlaylist, 3000);
+  getInitialState: function() {
+    return {
+      playlist: [] 
+    };
+  },
+  componentWillMount: function() {
+    this.api = new KodiApi(this.config);
   },
   refreshPlaylist: function() {
     console.log('refreshing playlist..');
-    this.api.getItem(function(err, response) {
+    this.api.getPlaylist((err, response) => {
       console.log(err, response)
       if (!err) {
-        console.log(response);
+        this.setState({ playlist: response.items || [] });
       }
     });
   },
@@ -42,74 +48,20 @@ const KodiToolBox = React.createClass({
           }
         ]
       });
-    // request.get(urllib.format({
-    //   protocol: 'http',
-    //   hostname: this.config.host,
-    //   port: this.config.port,
-    //   pathname: '/jsonrpc',
-    //   // auth: this.config.user + ':' + this.config.pass,
-    //   query: {
-    //     jsonrpc: '2.0',
-    //     method: 'Player.Open',
-    //     id: 1,
-    //     params: [
-    //       {
-    //         file: url
-    //       },
-    //       {
-    //         resume: true
-    //       }
-    //     ]
-    //   }
-    // }), {
-    //   auth: {
-    //     user: this.config.user,
-    //     pass: this.config.pass
-    //   },
-    //   protocol: 'http:',
-    //   // json: true
-    // }, (response) => {
-    //   console.log(response);
-    // });
 
     this.api.openFile(url, (err, response) => {
       console.log(err, response);
+      this.refreshPlaylist();
     });
-
-    // request.post(urllib.format({
-    //   protocol: 'http',
-    //   hostname: this.config.host,
-    //   port: this.config.port,
-    //   pathname: '/jsonrpc'
-    // }), {
-    //   auth: {
-    //     user: this.config.user,
-    //     pass: this.config.pass
-    //   },
-    //   protocol: 'http:',
-    //   json: true,
-    //   body: {
-    //     jsonrpc: '2.0',
-    //     method: 'Player.Open',
-    //     id: 1,
-    //     params: [
-    //       {
-    //         file: url
-    //       },
-    //       {
-    //         resume: true
-    //       }
-    //     ]
-    //   }
-    // }, (response) => {
-    //   console.log(response);
-    // });
   },
   render: function() {
     return (
       <div className="toolbox">
-        <KodiServerConfig updateConfig={this.updateConfig} />
-        <KodiPlaylist data={[{ key: 'aaa' }, { key: 'bbb' }]} />
+        <KodiServerConfig config={this.config} updateConfig={this.updateConfig} />
+        <button className="btn btn-xs" type="button" onClick={this.refreshPlaylist}>
+          Refresh Playlist
+        </button>
+        <KodiPlaylist data={this.state.playlist} />
         <KodiStreamForm playStream={this.playStream} />
       </div>
     );
