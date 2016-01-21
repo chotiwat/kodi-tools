@@ -439,10 +439,9 @@ var KodiApi = (function () {
           protocol: 'http',
           hostname: this.config.host,
           port: this.config.port,
-          pathname: '/jsonrpc'
+          pathname: '/jsonrpc',
+          auth: this.config.user + ':' + this.config.pass
         }),
-        user: this.config.user,
-        password: this.config.password,
         // mimeType: 'application/json',
         dataType: 'jsonp',
         jsonpCallback: 'jsonCallback',
