@@ -63,6 +63,7 @@ const KodiToolBox = React.createClass({
         </button>
         <KodiPlaylist data={this.state.playlist} />
         <KodiStreamForm playStream={this.playStream} />
+        <KodiAddonBrowser api={this.api} playStream={this.playStream} />
       </div>
     );
   }
