@@ -25,8 +25,16 @@ module.exports = (grunt) => {
           'dist/js/bundle.js': [ 'js/main.jsx' ]
         }
       }
+    },
+    uglify: {
+      dist: {
+        files: {
+          'dist/js/bundle.min.js': ['dist/js/bundle.js']
+        }
+      }
     }
   });
 
   grunt.registerTask('default', ['clean', 'copy', 'browserify']);
+  grunt.registerTask('dist', ['clean', 'copy', 'browserify', 'uglify']);
 }
