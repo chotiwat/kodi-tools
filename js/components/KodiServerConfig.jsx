@@ -4,43 +4,22 @@ const KodiServerConfig = React.createClass({
   getInitialState: function() {
     return this.props.config;
   },
+  updateConfig: function() {
+    this.props.updateConfig(this.state);
+  },
   handleHostChange: function(e) {
-    this.setState({ host: e.target.value });
+    this.setState({ host: e.target.value }, this.updateConfig);
   },
   handlePortChange: function(e) {
-    this.setState({ port: e.target.value });
+    this.setState({ port: e.target.value }, this.updateConfig);
   },
   handleUserChange: function(e) {
-    this.setState({ user: e.target.value });
+    this.setState({ user: e.target.value }, this.updateConfig);
   },
   handlePasswordChange: function(e) {
-    this.setState({ pass: e.target.value });
+    this.setState({ pass: e.target.value }, this.updateConfig);
   },
-  // handleSubmit: function(e) {
-  //   e.preventDefault();
-  //   let config;
-  //   if (this.state.config) {
-  //     config = null;
-  //   } else {
-  //     config = {
-  //       host: this.state.host,
-  //       port: this.state.port,
-  //       user: 'kod',
-  //       pass: 'kod'
-  //     };
-  //   }
-
-  //   this.setState({ config: config });
-  //   this.props.updateConfig(config);
-  // },
   render: function() {
-    // this.props.updateConfig({
-    //   host: this.state.host,
-    //   port: this.state.port,
-    //   user: this.state.user,
-    //   pass: this.state.pass
-    // });
-    let connectString = this.state.config ? 'Disconnect' : 'Connect';
     return (
       <form className="server-config">
         <div className="control-group">
