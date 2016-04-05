@@ -13,7 +13,7 @@ const KodiAddonBrowser = React.createClass({
     this.listAddons();
   },
   listAddons: function() {
-    this.props.api.call('Addons.GetAddons', ['xbmc.addon.video'], (err, response) => {
+    this.props.getApi().call('Addons.GetAddons', ['xbmc.addon.video'], (err, response) => {
       console.log('addons:', response);
       if (!err) {
         this.setState({
@@ -32,7 +32,7 @@ const KodiAddonBrowser = React.createClass({
   navigate: function(file, level) {
     if (file.filetype === 'directory') {
       console.log('dir', file);
-      this.props.api.call('Files.GetDirectory', [file.file], (err, response) => {
+      this.props.getApi().call('Files.GetDirectory', [file.file], (err, response) => {
         if (err) {
           console.error('getdir', err);
         } else {

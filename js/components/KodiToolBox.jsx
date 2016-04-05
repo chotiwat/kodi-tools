@@ -54,6 +54,9 @@ const KodiToolBox = React.createClass({
       this.refreshPlaylist();
     });
   },
+  getApi: function() {
+    return this.api;
+  },
   render: function() {
     return (
       <div className="toolbox">
@@ -63,7 +66,7 @@ const KodiToolBox = React.createClass({
         </button>
         <KodiPlaylist data={this.state.playlist} />
         <KodiStreamForm playStream={this.playStream} />
-        <KodiAddonBrowser api={this.api} playStream={this.playStream} />
+        <KodiAddonBrowser getApi={this.getApi} playStream={this.playStream} />
       </div>
     );
   }
