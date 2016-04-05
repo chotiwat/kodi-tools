@@ -7,8 +7,12 @@ const KodiAddonBrowser = require('./KodiAddonBrowser');
 // const urllib = require('url');
 const KodiApi = require('../lib/kodi-api');
 
+const STORAGE_KODI_KEY = 'kodi-config';
+const localConfig = localStorage.getItem(STORAGE_KODI_KEY);
+
 const KodiToolBox = React.createClass({
-  config: { host: '192.168.0.110', port: 8080, user: 'kod', pass: 'kod' },
+  config: localConfig ? JSON.parse(localConfig) :
+    { host: '192.168.0.106', port: 8080, user: 'kod', pass: 'kod' },
   api: null,
   getInitialState: function() {
     return {
@@ -30,6 +34,7 @@ const KodiToolBox = React.createClass({
   updateConfig: function(config) {
     if (config) {
       this.config = config;
+      localStorage.setItem(STORAGE_KODI_KEY, JSON.stringify(config));
       this.api = new KodiApi(config);
       // this.xbmcApi.setConnection(conn);
     }
@@ -54,6 +59,9 @@ const KodiToolBox = React.createClass({
       this.refreshPlaylist();
     });
   },
+  getApi: function() {
+    return this.api;
+  },
   render: function() {
     return (
       <div className="toolbox">
@@ -63,7 +71,7 @@ const KodiToolBox = React.createClass({
         </button>
         <KodiPlaylist data={this.state.playlist} />
         <KodiStreamForm playStream={this.playStream} />
-        <KodiAddonBrowser api={this.api} playStream={this.playStream} />
+        <KodiAddonBrowser getApi={this.getApi} playStream={this.playStream} />
       </div>
     );
   }
