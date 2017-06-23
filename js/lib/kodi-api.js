@@ -18,8 +18,7 @@ class KodiApi {
         protocol: 'http',
         hostname: this.config.host,
         port: this.config.port,
-        pathname: '/jsonrpc',
-        auth: this.config.user + ':' + this.config.pass
+        pathname: '/jsonrpc'
       }),
       // mimeType: 'application/json',
       dataType: 'jsonp',
@@ -30,7 +29,11 @@ class KodiApi {
         method: method,
         id: 1,
         params: params
-      }))
+      })),
+      beforeSend: (xhr) => {
+          xhr.setRequestHeader('Authorization',
+          'Basic ' + btoa(this.config.user + ':' + this.config.pass));
+      }
     })
     .done(function(data) {
       callback(null, data.result);
